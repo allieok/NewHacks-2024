@@ -1,0 +1,103 @@
+<!-- search-bar.html -->
+<div id="search-container">
+    <input type="text" id="search-input" placeholder="Search for a company..." oninput="showSuggestions()" onkeydown="handleKeyDown(event)">
+    <div id="suggestions" class="suggestions"></div>
+</div>
+
+<script>
+// Company names for the search autofill
+const companyNames = [
+    "Our Telecom Company",
+    "Telecom Giant",
+    "Network Solutions",
+    "DataConnect",
+    "Call Unlimited",
+    "Global Communications",
+    "Fiber Optics Co"
+];
+
+let selectedIndex = -1;
+
+function showSuggestions() {
+    const input = document.getElementById("search-input").value.toLowerCase();
+    const suggestionsBox = document.getElementById("suggestions");
+    suggestionsBox.innerHTML = "";
+    selectedIndex = -1;
+
+    if (input) {
+        const filteredSuggestions = companyNames.filter(name => name.toLowerCase().includes(input));
+        filteredSuggestions.forEach((name, index) => {
+            const suggestionItem = document.createElement("div");
+            suggestionItem.classList.add("suggestion-item");
+            suggestionItem.textContent = name;
+            suggestionItem.onclick = () => selectSuggestion(name);
+            suggestionsBox.appendChild(suggestionItem);
+        });
+    }
+}
+
+function selectSuggestion(name) {
+    document.getElementById("search-input").value = name;
+    document.getElementById("suggestions").innerHTML = "";
+}
+
+function handleKeyDown(event) {
+    const suggestionsBox = document.getElementById("suggestions");
+    const items = Array.from(suggestionsBox.getElementsByClassName("suggestion-item"));
+
+    if (event.key === "ArrowDown") {
+        selectedIndex = (selectedIndex + 1) % items.length;
+        updateSelection(items);
+    } else if (event.key === "ArrowUp") {
+        selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+        updateSelection(items);
+    } else if (event.key === "Enter") {
+        if (selectedIndex > -1) {
+            selectSuggestion(items[selectedIndex].textContent);
+            selectedIndex = -1;
+            event.preventDefault();
+        }
+    }
+}
+
+function updateSelection(items) {
+    items.forEach((item, index) => {
+        item.classList.toggle("selected", index === selectedIndex);
+    });
+}
+</script>
+
+<style>
+    #search-container {
+        position: relative;
+        width: 300px;
+    }
+
+    #search-input {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    .suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #ddd;
+        border-top: none;
+        max-height: 150px;
+        overflow-y: auto;
+        background-color: white;
+        z-index: 1000;
+    }
+
+    .suggestion-item {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .suggestion-item:hover, .suggestion-item.selected {
+        background-color: #f0f0f0;
+    }
+</style>

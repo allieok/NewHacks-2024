@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <script src="scripts.js" defer></script>
+</head>
+
+<body>
+    <!-- Include the search bar -->
+    <div id="search-bar-container"></div>
+    <script>
+        fetch("search-bar.html")
+            .then(response => response.text())
+            .then(html => document.getElementById("search-bar-container").innerHTML = html);
+    </script>
+
+    <header>
+        <h1>Account Settings</h1>
+    </header>
+
+    <section>
+        <h2>Set Monthly Limits</h2>
+        <form id="settingsForm" onsubmit="return validateLimits()">
+            <label for="dataLimit">Monthly Data Limit (GB):</label>
+            <input type="number" id="dataLimit" name="dataLimit" min="0" required>
+            <br>
+
+            <label for="callLimit">Monthly Call Limit (Minutes):</label>
+            <input type="number" id="callLimit" name="callLimit" min="0" required>
+            <br>
+
+            <button type="submit">Save Settings</button>
+        </form>
+    </section>
+
+    <script>
+        function validateLimits() {
+            const dataLimit = document.getElementById("dataLimit").value;
+            const callLimit = document.getElementById("callLimit").value;
+
+            if (dataLimit < 0 || callLimit < 0) {
+                alert("Monthly limits for data and calls cannot be negative. Please enter valid numbers.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+
+</html>

@@ -17,7 +17,9 @@ def load_account_from_csv(company_name, email):
     file_path = f"src/{company_name}.csv"  
 
     if not os.path.isfile(file_path):
-        print(f"Company not found.")
+        print(f"Company not found. Please try agaain.")
+        company_name = input("Enter your telecom company name: ").strip()
+        load_account_from_csv(company_name, email)
         return None
 
     with open(file_path, mode='r') as file:
@@ -30,7 +32,9 @@ def load_account_from_csv(company_name, email):
                 call_usage = int(row['callusage'].strip())
                 return Account(email, company_name, max_data, usage_data, max_call, call_usage)
 
-    print(f"Account {email} not found in {company_name}.")
+    print(f"Account {email} not found in {company_name}. Please try again.")
+    email = input("Enter your email: ").strip()
+    load_account_from_csv(company_name, email)
     return None
 
 def check_data_usage_limits(account, threshold = [0.1, 0.25, 0.5]):

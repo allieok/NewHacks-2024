@@ -1,9 +1,11 @@
 class Account:
-    def __init__(self, email, company, max_data, current_usage):
+    def __init__(self, email, company, max_data, current_usage, max_call, call_usage):
         self.email = email
         self.company = company
         self.max_data = max_data
         self.current_usage = current_usage
+        self.max_call = max_call
+        self.call_usage = call_usage
 
     def remaining_data(self):
         """Calculate the remaining data for the account."""

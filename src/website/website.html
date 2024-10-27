@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telecom Usage Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="scripts.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Telecom Usage Tracker</h1>
+        <div class="tabs">
+            <button class="tab" onclick="showContent('home')">Home</button>
+            <button class="tab" onclick="showContent('register')">Register</button>
+            <button class="tab" onclick="showContent('login')">Login</button>
+            <button class="tab" onclick="showContent('settings')">Settings</button>
+        </div>
+    </header>
+
+    <main id="content">
+        <section id="home" class="tab-content">
+            <h2>Overview</h2>
+            <p>This app allows you to track your telecom usage and set monthly limits.</p>
+            <p>Use the settings page to adjust your account preferences and usage limits.</p>
+        </section>
+
+        <section id="register" class="tab-content" style="display: none;">
+            <h2>Register</h2>
+            <form onsubmit="alert('Registered!'); return false;">
+                <input type="text" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Register</baautton>
+            </form>
+        </section>
+
+        <section id="login" class="tab-content" style="display: none;">
+            <h2>Login</h2>
+            <form onsubmit="alert('Logged in!'); return false;">
+                <input type="text" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </section>
+
+        <section id="settings" class="tab-content" style="display: none;">
+            <h2>Set Monthly Limits</h2>
+            <form id="settingsForm" onsubmit="return validateLimits()">
+                <label for="dataLimit">Monthly Data Limit (GB):</label>
+                <input type="number" id="dataLimit" name="dataLimit" min="0" placeholder="Choose or enter..." required>
+                <br>
+
+                <label for="callLimit">Monthly Call Limit (Minutes):</label>
+                <input type="number" id="callLimit" name="callLimit" min="0" placeholder="Choose or enter..." required>
+                <br>
+
+                <h1>Log Telecom Usage</h1>
+                <label for="dataUsage"> Log Telecom Usage:</label>
+                <input type="number" id="dataUsage" placeholder="Enter your data usage" required>
+                <button onclick="logTelecomUsage()">Log Usage</button>
+
+                <button type="submit">Save Settings</button>
+            </form>
+        </section>
+    </main>
+
+    
+</body>
+</html>

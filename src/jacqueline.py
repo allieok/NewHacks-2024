@@ -1,9 +1,9 @@
 import csv
 
-def addtofiles():
-    #for adding new accounts
-    account_company = "Telus"
-    new_account = ["dylan.doe@gmail.com", 30, 22] #example
+def addtofiles(account_company,new_account):
+    #example: account_company = "Telus"
+    #example: new_account = ["dylan.doe@gmail.com", 30, 22]
+    
     # Open the CSV file in append mode
     if account_company == "Telus":
         with open('src/telus.csv', mode='a', newline='') as file:

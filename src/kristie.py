@@ -7,7 +7,7 @@ smtp_server = "smtp.gmail.com"
 smtp_port = 587
 email_address = "yourerunningoutofdata@gmail.com"
 app_password = "urct wsrl xiqo tgou"
-to_address = "kristie.joy.ho@gmail.com" # need to change for actual lol...
+to_address = "" # need to change for actual lol...
 
 def send_email_notification(subject, body):
     msg = MIMEMultipart() # creates body of email

@@ -12,22 +12,19 @@ def load_account_from_csv(company_name, email):
 
     Parameters:
         company_name (str): The name of the company (used to locate the CSV file).
-        account_number (str): The account number of the user.
+        email (str): The email of the user.
 
     Returns:
-        Account: An Account instance if the account is found, otherwise None.
+        tuple: (Account, error_message) where Account is an instance if found, otherwise None and error_message is None if found, otherwise an error message.
     """
     if email == "a@mail.com" and company_name == "sample":
-        return Account(email, company_name, 5000, 1000, 300, 50)
+        return Account(email, company_name, 5000, 1000, 300, 50), None
     
     file_path = f"src/{company_name}.csv"  
 
     if not os.path.isfile(file_path):
-        print(f"Company not found. Please try agaain.")
-        company_name = input("Enter your telecom company name: ").strip()
-        load_account_from_csv(company_name, email)
-        return None
-
+        return None, "Company not found. Please try again."
+    
     with open(file_path, mode='r') as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -36,20 +33,17 @@ def load_account_from_csv(company_name, email):
                 usage_data = int(row['datausage'].strip())
                 max_call = int(row['callmax'].strip())
                 call_usage = int(row['callusage'].strip())
-                return Account(email, company_name, max_data, usage_data, max_call, call_usage)
+                return Account(email, company_name, max_data, usage_data, max_call, call_usage), None
 
-    print(f"Account {email} not found in {company_name}. Please try again.")
-    email = input("Enter your email: ").strip()
-    load_account_from_csv(company_name, email)
-    return None
+    return None, f"Account {email} not found in {company_name}. Please try again."
 
-def check_data_usage_limits(account, threshold = [0.1, 0.25, 0.5]):
+def check_data_usage_limits(account, threshold=[0.1, 0.25, 0.5]):
     """
     Checks if an account's usage is nearing the max rate based on a threshold.
 
     Parameters:
         account (Account): The Account instance to check.
-        threshold (float): The threshold of max data usage (default is 50%).
+        threshold (list): The threshold of max data usage (default is 50%).
 
     Returns:
         bool: True if the account is below its threshold. False otherwise.
@@ -59,23 +53,23 @@ def check_data_usage_limits(account, threshold = [0.1, 0.25, 0.5]):
             return True
     return False
 
-def check_call_usage_limits(account, threshold = [0.1, 0.25, 0.5]):
+def check_call_usage_limits(account, threshold=[0.1, 0.25, 0.5]):
     """
     Checks if an account's usage is nearing the max rate based on a threshold.
 
     Parameters:
         account (Account): The Account instance to check.
-        threshold (float): The threshold of max data usage (default is 50%).
+        threshold (list): The threshold of max call usage (default is 50%).
 
     Returns:
         bool: True if the account is below its threshold. False otherwise.
     """
     for num in threshold:
-        if account.current_usage / account.max_data <= num:
+        if account.call_usage / account.max_call <= num:
             return True
     return False
 
-@app.route('/run-check', methods=['POST'])
+@app.route('src/run-check', methods=['POST'])
 def run_check():
     data = request.json
     company = data.get('company')
@@ -130,7 +124,6 @@ def run_check():
         })
     else:
         return jsonify({'message': "Account not found."}), 404
-
 
 if __name__ == "__main__":
     app.run(debug=True)

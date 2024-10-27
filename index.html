@@ -69,26 +69,41 @@
 
     <script>
         function checkUsage() {
-            const email = prompt("Enter your email:");
-            const company = prompt("Enter your company name:");
+    const email = prompt("Enter your email:");
+    const company = prompt("Enter your company name:");
+    const data = {
+        email: email,
+        company: company
+    };
 
-            fetch('/run-check?company=' + encodeURIComponent(company) + '&email=' + encodeURIComponent(email))
-            .then(response => response.json())
-            .then(data => {
-                let resultMessage = `${data.message}\n`;
-                if (!data.error) {
-                    resultMessage += `Data Used: ${data.data_used} MB\n`;
-                    resultMessage += `Data Remaining: ${data.data_remaining} MB\n`;
-                    resultMessage += `Call Minutes Used: ${data.call_used} minutes\n`;
-                    resultMessage += `Call Minutes Remaining: ${data.call_remaining} minutes\n`;
-                }
-                document.getElementById('result').innerText = resultMessage;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('result').innerText = "An error occurred while fetching the data.";
-            });
-        }
+    fetch('src/run-check', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            let resultMessage = `${data.message}\n`;
+            if (!data.error) {
+                resultMessage += `Data Used: ${data.data_used} MB\n`;
+                resultMessage += `Data Remaining: ${data.data_remaining} MB\n`;
+                resultMessage += `Call Minutes Used: ${data.call_used} minutes\n`;
+                resultMessage += `Call Minutes Remaining: ${data.call_remaining} minutes\n`;
+            }
+            document.getElementById('result').innerText = resultMessage;
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            document.getElementById('result').innerText = "An error occurred while fetching the data: " + error.message;
+        });
+     }
     </script>
 </body>
 </html>

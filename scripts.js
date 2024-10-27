@@ -1,3 +1,5 @@
+
+
 // Function to show selected tab content
 function showContent(tabName) {
     const contents = document.querySelectorAll('.tab-content');
@@ -6,17 +8,8 @@ function showContent(tabName) {
     });
 }
 
-//need to add data limits
-
-// Event listeners for input changes
-document.getElementById("dataLimit").addEventListener("input", function() {
-    suggestLimit(this, dataLimits, document.getElementById("dataSuggestion"));
-});
-
-document.getElementById("callLimit").addEventListener("input", function() {
-    suggestLimit(this, callLimits, document.getElementById("callSuggestion"));
-});
-
+//Data Management 
+////------------------------------------------------------------------------------------------------------------
 // Validate limits to ensure non-negative values and save to local storage
 function validateLimits() {
     const dataLimit = document.getElementById("dataLimit").value;
@@ -27,16 +20,29 @@ function validateLimits() {
         return false;
     }
 
-    // Save to local storage (web storage feature)
+    // Save to local storage
     localStorage.setItem("monthlyDataLimit", dataLimit);
     localStorage.setItem("monthlyCallLimit", callLimit);
-    
+
+    // Save notification preferences
+    saveNotificationPreferences();
+
     alert("Settings saved!");
     return true;
 }
 
-// Load saved limits when the page loads
+// Save notification preferences to localStorage
+function saveNotificationPreferences() {
+    const notifications = ["notify5", "notify10", "notify20", "notify50"];
+    notifications.forEach(id => {
+        const checkbox = document.getElementById(id);
+        localStorage.setItem(id, checkbox.checked);
+    });
+}
+
+// Load saved limits and notification preferences on page load
 window.onload = function() {
+    // Load data and call limits
     const savedDataLimit = localStorage.getItem("monthlyDataLimit");
     const savedCallLimit = localStorage.getItem("monthlyCallLimit");
 
@@ -46,23 +52,39 @@ window.onload = function() {
     if (savedCallLimit !== null) {
         document.getElementById("callLimit").value = savedCallLimit;
     }
+
+    // Load notification preferences
+    loadNotificationPreferences();
 };
 
+// Load notification preferences from localStorage
+function loadNotificationPreferences() {
+    const notifications = ["notify5", "notify10", "notify20", "notify50"];
+    notifications.forEach(id => {
+        const isChecked = localStorage.getItem(id) === "true";
+        document.getElementById(id).checked = isChecked;
+    });
+}
 
+
+//Register and Login Management 
+//------------------------------------------------------------------------------------------------------------
 // Function to register a user
 function registerUser() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const companyName = document.getElementById("companyname").value;
 
-    // Save email and password to localStorage (for demo purposes; in real apps, use a secure backend)
-    if (email && password) {
+    // Save email and password and companyname to localStorage (for demo purposes; in real apps, use a secure backend)
+    if (email && password && companyName) {
         localStorage.setItem("userEmail", email); //Storing email
+        localStorage.setItem("userCompany", companyName); //Storing company's name
         sendConfirmationEmail(email); // Send confirmation email
         alert("Registration successful! Check your email for confirmation.");
         window.location.href = "login.html";  // Redirect to login page
         return true;
     } else {
-        alert("Please enter a valid email and password.");
+        alert("Please enter a valid email, company name and password.");
         return false;
     }
 }

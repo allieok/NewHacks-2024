@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <!-- Include the search bar -->
+    <!-- Search Bar -->
     <div id="search-bar-container"></div>
     <script>
         fetch("search-bar.html")
@@ -32,22 +32,17 @@
             <input type="number" id="callLimit" name="callLimit" min="0" required>
             <br>
 
+            <h3>User Notification Timing Preferences </h3>
+            <p>Select when you want to be notified of remaining data usage:</p>
+
+            <label><input type="checkbox" id="notify5" name="notification" value="5"> 5% left</label><br>
+            <label><input type="checkbox" id="notify10" name="notification" value="10"> 10% left</label><br>
+            <label><input type="checkbox" id="notify20" name="notification" value="20"> 20% left</label><br>
+            <label><input type="checkbox" id="notify50" name="notification" value="50"> 50% left</label><br>
+
             <button type="submit">Save Settings</button>
         </form>
     </section>
-
-    <script>
-        function validateLimits() {
-            const dataLimit = document.getElementById("dataLimit").value;
-            const callLimit = document.getElementById("callLimit").value;
-
-            if (dataLimit < 0 || callLimit < 0) {
-                alert("Monthly limits for data and calls cannot be negative. Please enter valid numbers.");
-                return false;
-            }
-            return true;
-        }
-    </script>
 </body>
 
 </html>

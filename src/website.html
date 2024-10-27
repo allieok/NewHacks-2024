@@ -1,16 +1,100 @@
-# h1 Heading 
-## h2 Heading 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telecom Usage Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js"></script>
+</head>
+<body>
 
-## Horizontal Rules 
+        <!-- Search Bar Container -->
+    <div class="search-bar-overlay">
+        <input type="text" id="searchBar" placeholder="Search..." />
+    </div>
 
---
-##Emphasis 
+    <header>
+        <h1>Welcome to Telecom Usage Tracker</h1>
+        <div class="tabs">
+            <button class="tab" onclick="showContent('home')">Home</button>
+            <button class="tab" onclick="showContent('register')">Register</button>
+            <button class="tab" onclick="showContent('login')">Login</button>
+            <button class="tab" onclick="showContent('settings')">Settings</button>
+        </div>
+    </header>
 
-**This is bold text **
-__This is bold text__
-*This is italic text *
-_This is italic text_
-~This is strikethrough ~
+    <main id="content">
+        <section id="home" class="tab-content">
+            <h2>Overview</h2>
+            <p>This app allows you to track your telecom usage and set monthly limits.</p>
+            <p>Use the settings page to adjust your account preferences and usage limits.</p>
+        </section>
 
+        <section id="register" class="tab-content" style="display: none;">
+            <h2>Register</h2>
+            <form onsubmit="alert('Registered!'); return false;">
+                <input type="text" placeholder="Email" required>
+                <input type = "text" placeholder="Company Name" required >
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+        </section>
 
-## The End!
+        <section id="login" class="tab-content" style="display: none;">
+            <h2>Login</h2>
+            <form onsubmit="alert('Logged in!'); return false;">
+                <input type="text" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </section>
+
+        <section id="settings" class="tab-content" style="display: none;">
+            <h2>Set Monthly Limits</h2>
+            <form id="settingsForm" onsubmit="return validateLimits()">
+                <label for="dataLimit">Monthly Data Limit (GB):</label>
+                <input type="number" id="dataLimit" name="dataLimit" min="0" placeholder="Choose or enter..." required>
+        
+                <label for="callLimit">Monthly Call Limit (Minutes):</label>
+                <input type="number" id="callLimit" name="callLimit" min="0" placeholder="Choose or enter..." required>
+                
+                <h3>Notification Thresholds</h3>
+                <p>Select when you want to be notified of remaining data usage:</p>
+        
+                <label><input type="checkbox" id="notify5" name="notification" value="5"> 5% left</label><br>
+                <label><input type="checkbox" id="notify10" name="notification" value="10"> 10% left</label><br>
+                <label><input type="checkbox" id="notify20" name="notification" value="20"> 20% left</label><br>
+                <label><input type="checkbox" id="notify50" name="notification" value="50"> 50% left</label><br>
+                
+                <button type="submit">Save Settings</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Autocomplete Script -->
+    <script src="autocomplete.js"></script>
+    <script>
+        const companyNames = [
+            "Rogers",
+            "Bell",
+            "Telus",
+            "Freedom Mobile",
+            "Fido",
+        ];
+
+        autocomplete({
+            input: document.getElementById('searchBar'),
+            fetch: function(text, update) {
+                text = text.toLowerCase();
+                const suggestions = companyNames.filter(name => name.toLowerCase().includes(text));
+                update(suggestions);
+            },
+            onSelect: function(item) {
+                document.getElementById('searchBar').value = item;
+            }
+        });
+    </script>
+
+</body>
+</html>

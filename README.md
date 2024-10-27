@@ -1,1 +1,3 @@
-# NewHacks-2024
+# You're Running Out Of Data!
+Our project stems around the idea where many people do not get notified when their data or call minutes our low. Sometimes you're just trying to call or text someone a story but you're data runs out right when you get to the good part! You don't have to worry now because You're Running Out Of Data will let you know when you are low on data so you can keep your story short and sweet OR purchase more data ahead of time.
+Not only is You're Running Out Of Data able to notify you of your call and/or data usage, it is also customizable! No more only letting you know when you're already 2 hours into a podcast during a road trip with no rest stops nearby. You can choose when you want to get notified with a simple email.

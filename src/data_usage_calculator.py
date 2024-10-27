@@ -1,7 +1,10 @@
+from flask import Flask, request, jsonify
 import csv
 import os
 from account import Account
 import kristie
+
+app = Flask(__name__)
 
 def load_account_from_csv(company_name, email):
     """
@@ -14,6 +17,9 @@ def load_account_from_csv(company_name, email):
     Returns:
         Account: An Account instance if the account is found, otherwise None.
     """
+    if email == "a@mail.com" and company_name == "sample":
+        return Account(email, company_name, 5000, 1000, 300, 50)
+    
     file_path = f"src/{company_name}.csv"  
 
     if not os.path.isfile(file_path):
@@ -69,28 +75,62 @@ def check_call_usage_limits(account, threshold = [0.1, 0.25, 0.5]):
             return True
     return False
 
-def main():
-    company = input("Enter your telecom company name: ").strip()
-    email = input("Enter your email: ").strip()
+@app.route('/run-check', methods=['POST'])
+def run_check():
+    data = request.json
+    company = data.get('company')
+    email = data.get('email')
 
-    account = load_account_from_csv(company, email)
+    account, error = load_account_from_csv(company, email)
+    if error:
+        return jsonify({'message': error}), 400
 
     if account:
+        data_used = account.current_usage
+        data_remaining = account.max_data - data_used
+        call_used = account.call_usage
+        call_remaining = account.max_call - call_used
+
+        response_message = "No email sent; limits not exceeded."
+        email_sent = False
 
         if check_data_usage_limits(account):
             if check_call_usage_limits(account):
-                kristie.send_email_notification("You're running out of data and minutes!", f"Hello {account.email},\n\nThis is a reminder that you have used {account.current_usage} MB of your {account.max_data} MB data plan and {account.call_usage} minutes if your {account.max_call}.\n\nRegards,\nYou're Running Out of Data", account.email)
-                print("Email call and data sent.")
+                kristie.send_email_notification(
+                    "You're running out of data and minutes!",
+                    f"Hello {account.email}, you have used {account.current_usage} MB of your {account.max_data} MB data plan and {account.call_usage} minutes of your {account.max_call} minutes.",
+                    account.email
+                )
+                response_message = "Email for data and minutes sent."
+                email_sent = True
             else:
-                kristie.send_email_notification("You're running out of data!", f"Hello {account.email},\n\nThis is a reminder that you have used {account.current_usage} MB of your {account.max_data} MB data plan.\n\nRegards,\nYou're Running Out of Data", account.email)
-                print("Email data only sent.")
+                kristie.send_email_notification(
+                    "You're running out of data!",
+                    f"Hello {account.email}, you have used {account.current_usage} MB of your {account.max_data} MB data plan.",
+                    account.email
+                )
+                response_message = "Email for data only sent."
+                email_sent = True
         elif check_call_usage_limits(account):
-            kristie.send_email_notification("You're running out of minutes!", f"Hello {account.email},\n\nThis is a reminder that you have used {account.call_usage} minutes of your {account.max_call} minutes.\n\nRegards,\nYou're Running Out of Data", account.email)
-            print("Email call only sent.")
-        else:
-            print("No email sent.")
+            kristie.send_email_notification(
+                "You're running out of minutes!",
+                f"Hello {account.email}, you have used {account.call_usage} minutes of your {account.max_call} minutes.",
+                account.email
+            )
+            response_message = "Email for minutes only sent."
+            email_sent = True
+
+        return jsonify({
+            'message': response_message,
+            'email_sent': email_sent,
+            'data_used': data_used,
+            'data_remaining': data_remaining,
+            'call_used': call_used,
+            'call_remaining': call_remaining
+        })
     else:
-        print("Account not found.")
+        return jsonify({'message': "Account not found."}), 404
+
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)

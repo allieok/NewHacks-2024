@@ -1,5 +1,3 @@
-import data_usage_calculator 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +24,8 @@ import data_usage_calculator
             <h2>Overview</h2>
             <p>This app allows you to track your telecom usage and set monthly limits.</p>
             <p>Use the settings page to adjust your account preferences and usage limits.</p>
+            <button onclick="checkUsage()">Check Usage</button>
+            <div id="result"></div>
         </section>
 
         <section id="register" class="tab-content" style="display: none;">
@@ -33,7 +33,7 @@ import data_usage_calculator
             <form onsubmit="alert('Registered!'); return false;">
                 <input type="text" placeholder="Email" required>
                 <input type="password" placeholder="Password" required>
-                <button type="submit">Register</baautton>
+                <button type="submit">Register</button>
             </form>
         </section>
 
@@ -67,6 +67,32 @@ import data_usage_calculator
         </section>
     </main>
 
-    
+    <script>
+        function checkUsage() {
+            const email = prompt("Enter your email:");
+            const company = prompt("Enter your company name:");
+
+            fetch('/run-check?company=' + encodeURIComponent(company) + '&email=' + encodeURIComponent(email))
+            .then(response => response.json())
+            .then(data => {
+                let resultMessage = `${data.message}\n`;
+                if (!data.error) {
+                    resultMessage += `Data Used: ${data.data_used} MB\n`;
+                    resultMessage += `Data Remaining: ${data.data_remaining} MB\n`;
+                    resultMessage += `Call Minutes Used: ${data.call_used} minutes\n`;
+                    resultMessage += `Call Minutes Remaining: ${data.call_remaining} minutes\n`;
+                }
+                document.getElementById('result').innerText = resultMessage;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "An error occurred while fetching the data.";
+            });
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "An error occurred while fetching the data.";
+            });
+        }
+    </script>
 </body>
 </html>

@@ -14,7 +14,7 @@ def load_account_from_csv(company_name, email):
     Returns:
         Account: An Account instance if the account is found, otherwise None.
     """
-    file_path = f"src/usageTracking/{company_name}.csv"  
+    file_path = f"src/{company_name}.csv"  
 
     if not os.path.isfile(file_path):
         print(f"Company not found.")
@@ -57,7 +57,7 @@ def main():
 
         if check_usage_limits(account):
             kristie.send_email_notification("You're running out of data!", f"Hello {account.email},\n\nThis is a reminder that you have used {account.current_usage} MB of your {account.max_data} MB data plan.\n\nRegards,\nYou're Running Out of Data", account.email)
-
+            print("Email sent.")
     else:
         print("Account not found.")
 

@@ -1,13 +1,17 @@
-import smtplib 
+import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from dotenv import load_dotenv
+import os
 
-# Email configuration
-smtp_server = "smtp.gmail.com"
-smtp_port = 587
-email_address = "yourerunningoutofdata@gmail.com"
-app_password = "urct wsrl xiqo tgou"
-to_address = "" # need to change for actual lol...
+# Load environment variables
+load_dotenv()
+
+smtp_server = os.getenv("SMTP_SERVER")
+smtp_port = int(os.getenv("SMTP_PORT"))
+email_address = os.getenv("EMAIL_ADDRESS")
+app_password = os.getenv("APP_PASSWORD")
+to_address = os.getenv("TO_ADDRESS")
 
 def send_email_notification(subject, body):
     msg = MIMEMultipart() # creates body of email
